@@ -5,10 +5,12 @@ import com.blog.blog_app.exception.ResourceNotFoundException;
 import com.blog.blog_app.payload.UserDTO;
 import com.blog.blog_app.repository.UserRepo;
 import com.blog.blog_app.service.UserService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class UserServiceImplementation implements UserService{
 
     private UserRepo userRepo;
@@ -74,7 +76,7 @@ public class UserServiceImplementation implements UserService{
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setAbout(userDTO.getAbout());
-        user.setPassword(user.getPassword());
+        user.setPassword(userDTO.getPassword());
 
         return user;
     }
