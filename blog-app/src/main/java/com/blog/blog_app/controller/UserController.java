@@ -34,7 +34,7 @@ public class UserController {
     //PUT- Update User
     @PutMapping("/{userId}")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO
-                                              , @PathVariable("user") Integer userId){
+                                              , @PathVariable("userId") Integer userId){
         UserDTO updatedUser = this.userService.updateUser(userDTO, userId);
         return ResponseEntity.ok(updatedUser);
     }
@@ -42,7 +42,7 @@ public class UserController {
     //DELETE - delete user
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable("userId") Integer userId){
-        this.deleteUser(userId);
+        this.userService.deleteUser(userId);
 //        return ResponseEntity.ok(Map.of("message","User Deleted Successful"));
 //        return new ResponseEntity(Map.of("message","User Deleted Successful"), HttpStatus.OK);
         return new ResponseEntity(new ApiResponse("User Deleted Successful",true), HttpStatus.OK);

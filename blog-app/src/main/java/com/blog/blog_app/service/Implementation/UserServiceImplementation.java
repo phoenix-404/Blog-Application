@@ -29,7 +29,7 @@ public class UserServiceImplementation implements UserService{
     @Override
     public UserDTO updateUser(UserDTO userDTO, Integer userId) {
         User user = this.userRepo.findById(userId).
-                orElseThrow(() -> new ResourceNotFoundException("User", userId, "ID"));
+                orElseThrow(() -> new ResourceNotFoundException("User", "ID", userId));
 
         user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
@@ -45,7 +45,7 @@ public class UserServiceImplementation implements UserService{
     @Override
     public UserDTO getUserById(Integer userId) {
         User user = this.userRepo.findById(userId).
-                orElseThrow(() -> new ResourceNotFoundException("User", userId, "ID"));
+                orElseThrow(() -> new ResourceNotFoundException("User", "ID", userId));
 
         return this.userToDTO(user);
     }
@@ -62,7 +62,7 @@ public class UserServiceImplementation implements UserService{
     @Override
     public void deleteUser(Integer userId) {
         User user = this.userRepo.findById(userId).
-                orElseThrow(() -> new ResourceNotFoundException("User", userId, "ID"));
+                orElseThrow(() -> new ResourceNotFoundException("User", "ID", userId));
 
         this.userRepo.delete(user);
 
