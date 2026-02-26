@@ -1,17 +1,15 @@
 package com.blog.blog_app.controller;
 
-
-import com.blog.blog_app.entity.User;
 import com.blog.blog_app.payload.ApiResponse;
 import com.blog.blog_app.payload.UserDTO;
 import com.blog.blog_app.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,7 +23,7 @@ public class UserController {
 
     //POST-create user
     @PostMapping("/")
-    public ResponseEntity<UserDTO> crateUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> crateUser(@Valid @RequestBody UserDTO userDTO){
         UserDTO createUserDTO = this.userService.creteUser(userDTO);
 
         return new ResponseEntity<>(createUserDTO, HttpStatus.CREATED);
@@ -33,7 +31,7 @@ public class UserController {
 
     //PUT- Update User
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO
                                               , @PathVariable("userId") Integer userId){
         UserDTO updatedUser = this.userService.updateUser(userDTO, userId);
         return ResponseEntity.ok(updatedUser);

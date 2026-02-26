@@ -5,6 +5,8 @@ import com.blog.blog_app.exception.ResourceNotFoundException;
 import com.blog.blog_app.payload.UserDTO;
 import com.blog.blog_app.repository.UserRepo;
 import com.blog.blog_app.service.UserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +20,9 @@ public class UserServiceImplementation implements UserService{
     public UserServiceImplementation(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public UserDTO creteUser(UserDTO userDTO) {
@@ -68,27 +73,30 @@ public class UserServiceImplementation implements UserService{
 
     }
 
-    //Conversion of UserDTO to User, can be done using ModelMapping.
+    //Conversion of UserDTO to Entity(USER), can be done using ModelMapping.
     private User dtoToUser(UserDTO userDTO){
-        User user = new User();
+        User user = this.modelMapper.map(userDTO, User.class);
 
-        user.setId(userDTO.getId());
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setAbout(userDTO.getAbout());
-        user.setPassword(userDTO.getPassword());
+//        User user = new User();
+//        user.setId(userDTO.getId());
+//        user.setName(userDTO.getName());
+//        user.setEmail(userDTO.getEmail());
+//        user.setAbout(userDTO.getAbout());
+//        user.setPassword(userDTO.getPassword());
 
         return user;
     }
 
+    //Conversion of Entity(USER) to UserDTO
     public UserDTO userToDTO(User user){
-        UserDTO userDTO = new UserDTO();
+        UserDTO userDTO = this.modelMapper.map(user,UserDTO.class);
 
-        userDTO.setId(user.getId());
-        userDTO.setName(user.getName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setAbout(user.getAbout());
+//        UserDTO userDTO = new UserDTO();
+//        userDTO.setId(user.getId());
+//        userDTO.setName(user.getName());
+//        userDTO.setEmail(user.getEmail());
+//        userDTO.setPassword(user.getPassword());
+//        userDTO.setAbout(user.getAbout());
 
         return userDTO;
     }
