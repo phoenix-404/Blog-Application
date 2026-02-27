@@ -25,7 +25,7 @@ public class UserServiceImplementation implements UserService{
     private ModelMapper modelMapper;
 
     @Override
-    public UserDTO creteUser(UserDTO userDTO) {
+    public UserDTO createUser(UserDTO userDTO) {
         User user = this.dtoToUser(userDTO);
         User savedUser = this.userRepo.save(user);
         return this.userToDTO(savedUser);
@@ -42,9 +42,8 @@ public class UserServiceImplementation implements UserService{
         user.setAbout(userDTO.getAbout());
 
         User updatedUser = this.userRepo.save(user);
-        UserDTO userDTO1 = this.userToDTO(updatedUser);
 
-        return userDTO1;
+        return this.userToDTO(updatedUser);
     }
 
     @Override
@@ -88,7 +87,7 @@ public class UserServiceImplementation implements UserService{
     }
 
     //Conversion of Entity(USER) to UserDTO
-    public UserDTO userToDTO(User user){
+    private UserDTO userToDTO(User user){
         UserDTO userDTO = this.modelMapper.map(user,UserDTO.class);
 
 //        UserDTO userDTO = new UserDTO();

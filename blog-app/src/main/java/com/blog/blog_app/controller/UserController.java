@@ -23,8 +23,8 @@ public class UserController {
 
     //POST-create user
     @PostMapping("/")
-    public ResponseEntity<UserDTO> crateUser(@Valid @RequestBody UserDTO userDTO){
-        UserDTO createUserDTO = this.userService.creteUser(userDTO);
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO){
+        UserDTO createUserDTO = this.userService.createUser(userDTO);
 
         return new ResponseEntity<>(createUserDTO, HttpStatus.CREATED);
     }
@@ -39,11 +39,11 @@ public class UserController {
 
     //DELETE - delete user
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable("userId") Integer userId){
+    public ResponseEntity<ApiResponse> deleteUser(@PathVariable("userId") Integer userId){
         this.userService.deleteUser(userId);
 //        return ResponseEntity.ok(Map.of("message","User Deleted Successful"));
 //        return new ResponseEntity(Map.of("message","User Deleted Successful"), HttpStatus.OK);
-        return new ResponseEntity(new ApiResponse("User Deleted Successful",true), HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse("User Deleted Successful",true), HttpStatus.OK);
     }
 
     //GET - retrieve all users
