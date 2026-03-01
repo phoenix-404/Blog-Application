@@ -1,6 +1,7 @@
 package com.blog.blog_app.payload;
 
 import com.blog.blog_app.entity.Category;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,8 +14,12 @@ import java.util.Date;
 @NoArgsConstructor
 public class PostDTO {
 
+    private Integer postId;
+
+    @NotNull
     private String postTitle;
 
+    @NotNull
     private  String content;
 
     private String image;

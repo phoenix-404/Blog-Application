@@ -5,11 +5,15 @@ import com.blog.blog_app.entity.Post;
 import com.blog.blog_app.entity.User;
 import com.blog.blog_app.exception.ResourceNotFoundException;
 import com.blog.blog_app.payload.PostDTO;
+import com.blog.blog_app.payload.PostResponse;
 import com.blog.blog_app.repository.CategoryRepo;
 import com.blog.blog_app.repository.PostRepo;
 import com.blog.blog_app.repository.UserRepo;
 import com.blog.blog_app.service.PostService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -68,11 +72,29 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    public List<PostDTO> getAllPost() {
-        List<Post> posts = this.postRepo.findAll();
+//    public List<PostDTO> getAllPost(Integer pageNumber, Integer pageSize) {
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
+//        int pageSize = 10;
+//        int pageNumber = 2;
 
-        List<PostDTO> postDTOS = posts.stream().map((post -> this.modelMapper.map(post,PostDTO.class))).toList();
-        return postDTOS;
+        Pageable pages = PageRequest.of(pageNumber,pageSize);
+        Page<Post> pagePost = this.postRepo.findAll(pages);
+
+        List<Post> allPost = pagePost.getContent();
+//        List<Post> posts = this.postRepo.findAll();
+
+        List<PostDTO> postDTOS = allPost.stream().map((post -> this.modelMapper.map(post,PostDTO.class))).toList();
+
+        PostResponse postResponse = new PostResponse();
+
+        postResponse.setContent(postDTOS);
+        postResponse.setPageNumber(pagePost.getNumber());
+        postResponse.setPageSize(pagePost.getSize());
+        postResponse.setTotalElements(pagePost.getTotalElements());
+        postResponse.setTotalPages(pagePost.getTotalPages());
+        postResponse.setLastPage(pagePost.isLast());
+
+        return postResponse;
     }
 
     @Override
@@ -82,21 +104,58 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    public List<PostDTO> getAllPostByUser(Integer userId) {
+    public PostResponse getAllPostByUser(Integer userId, Integer pageNumber, Integer pageSize) {
+    //  1. Find the user
         User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","ID",userId));
-        List<Post> posts = this.postRepo.findByUser(user);
 
-        List<PostDTO> postUserDTOS = posts.stream().map((post -> this.modelMapper.map(post,PostDTO.class))).toList();
-        return postUserDTOS;
+    //  2. Create the Pageable object
+        Pageable pages = PageRequest.of(pageNumber,pageSize);
+
+//      3. Pass Pageable to the repo (returns a Page<Post>)
+        Page<Post> postUserPage = this.postRepo.findByUser(user,pages);
+//      List<Post> posts = this.postRepo.findByUser(user);
+
+//      4. Get content from the Page object
+        List<Post> posts = postUserPage.getContent();
+
+        List<PostDTO> userPostDTOS = posts.stream().map((post -> this.modelMapper.map(post,PostDTO.class))).toList();
+        PostResponse postResponse = new PostResponse();
+
+        postResponse.setContent(userPostDTOS);
+        postResponse.setPageNumber(postUserPage.getNumber());
+        postResponse.setPageSize(postUserPage.getSize());
+        postResponse.setTotalElements(postUserPage.getTotalElements());
+        postResponse.setTotalPages(postUserPage.getTotalPages());
+        postResponse.setLastPage(postUserPage.isLast());
+
+        return postResponse;
+//        return postUserDTOS;
     }
 
     @Override
-    public List<PostDTO> getAllPostByCategory(Integer categoryId) {
+    public PostResponse getAllPostByCategory(Integer categoryId, Integer pageNumber, Integer pageSize) {
+
         Category category = this.categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category","ID", categoryId));
-        List<Post> posts = this.postRepo.findByCategory(category);
+
+        Pageable pages = PageRequest.of(pageNumber,pageSize);
+
+        Page<Post> postCategoryPage = this.postRepo.findByCategory(category,pages);
+
+        List<Post> posts = postCategoryPage.getContent();
+//        List<Post> posts = this.postRepo.findByCategory(category);
 
         List<PostDTO> postCategoryDTOS =  posts.stream().map((post) -> this.modelMapper.map(post,PostDTO.class)).toList();
-        return postCategoryDTOS;
+
+        PostResponse postResponse = new PostResponse();
+
+        postResponse.setContent(postCategoryDTOS);
+        postResponse.setPageNumber(postCategoryPage.getNumber());
+        postResponse.setPageSize(postCategoryPage.getSize());
+        postResponse.setTotalPages(postCategoryPage.getTotalPages());
+        postResponse.setTotalElements(postCategoryPage.getTotalElements());
+        postResponse.setLastPage(postCategoryPage.isLast());
+
+        return postResponse;
     }
 
     @Override

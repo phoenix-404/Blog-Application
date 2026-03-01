@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
 
-    private int id;
+    private Integer userId;
 
 //    @NotEmpty ensures that a field is not null and also not empty,
 //    meaning it must contain at least one element (for collections) or
