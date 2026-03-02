@@ -21,20 +21,20 @@ public interface PostService {
     //get all posts
 //    List<PostDTO> getAllPost();
 //    List<PostDTO> getAllPost(Integer pageNumber, Integer pageSize); //Implementation of Pagination
-    PostResponse getAllPost(Integer pageNumber, Integer pageSize);
+    PostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy, String sortDir); //Implementation of sorting
 
     //Get Single post
     PostDTO getPostById(Integer postId);
 
     //Get all posts by user
 //    List<PostDTO> getAllPostByUser(Integer userId);
-    PostResponse getAllPostByUser(Integer userId, Integer pageNumber, Integer pageSize);
+    PostResponse getAllPostByUser(Integer userId, Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
     //Get all posts by category
 //    List<PostDTO> getAllPostByCategory(Integer categoryId);
-    PostResponse getAllPostByCategory(Integer categoryId, Integer pageNumber, Integer pageSize);
+    PostResponse getAllPostByCategory(Integer categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
     //Search
-    List<PostDTO> searchAllPost(String keyword);
+    List<PostDTO> searchPost(String keyword);
 
 }

@@ -15,5 +15,10 @@ public interface PostRepo extends JpaRepository<Post, Integer> {
     Page<Post> findByUser(User user, Pageable pageable);
 //    List<Post> findByCategory(Category category);
     Page<Post> findByCategory(Category category, Pageable pageable);
+
+//    Spring Data JPA uses Method Derivation to write queries for you.
+//    When We defined findByTitleContaining(String title) in PostRepo,
+//    Spring looked at Post entity to find a field named PostTitle.
+    List<Post> findByPostTitleContaining(String title);
 }
 

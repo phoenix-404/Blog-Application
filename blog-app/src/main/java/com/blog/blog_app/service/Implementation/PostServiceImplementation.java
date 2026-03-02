@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -73,11 +74,17 @@ public class PostServiceImplementation implements PostService {
 
     @Override
 //    public List<PostDTO> getAllPost(Integer pageNumber, Integer pageSize) {
-    public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
 //        int pageSize = 10;
 //        int pageNumber = 2;
+        Sort sort = (sortDir.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
 
-        Pageable pages = PageRequest.of(pageNumber,pageSize);
+//        if(sortDir.equalsIgnoreCase("asc"))
+//            sort = Sort.by(sortBy).ascending();
+//        else
+//            sort = Sort.by(sortBy).descending();
+
+        Pageable pages = PageRequest.of(pageNumber,pageSize, sort);
         Page<Post> pagePost = this.postRepo.findAll(pages);
 
         List<Post> allPost = pagePost.getContent();
@@ -104,12 +111,15 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    public PostResponse getAllPostByUser(Integer userId, Integer pageNumber, Integer pageSize) {
+    public PostResponse getAllPostByUser(Integer userId, Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
+        //For Sorting Direction only
+        Sort sort = (sortDir.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+
     //  1. Find the user
         User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","ID",userId));
 
     //  2. Create the Pageable object
-        Pageable pages = PageRequest.of(pageNumber,pageSize);
+        Pageable pages = PageRequest.of(pageNumber,pageSize,sort);
 
 //      3. Pass Pageable to the repo (returns a Page<Post>)
         Page<Post> postUserPage = this.postRepo.findByUser(user,pages);
@@ -133,7 +143,8 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    public PostResponse getAllPostByCategory(Integer categoryId, Integer pageNumber, Integer pageSize) {
+    public PostResponse getAllPostByCategory(Integer categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
+        Sort sort = (sortDir.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
 
         Category category = this.categoryRepo.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category","ID", categoryId));
 
@@ -159,7 +170,10 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    public List<PostDTO> searchAllPost(String keyword) {
-        return List.of();
+    public List<PostDTO> searchPost(String keyword) {
+        List<Post> posts = this.postRepo.findByPostTitleContaining(keyword);
+
+        List<PostDTO> postDTOS = posts.stream().map((post) -> this.modelMapper.map(post, PostDTO.class)).toList();
+        return postDTOS;
     }
 }
