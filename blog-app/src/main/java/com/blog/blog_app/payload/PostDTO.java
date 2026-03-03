@@ -1,13 +1,13 @@
 package com.blog.blog_app.payload;
 
-import com.blog.blog_app.entity.Category;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.catalina.User;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,4 +29,6 @@ public class PostDTO {
     //Only defining User and Category only creates error of infinite iteration
     private CategoryDTO category;
     private UserDTO user;
+
+    private Set<CommentDTO> comments = new HashSet<>();
 }
